@@ -4,7 +4,7 @@
 
 Develop a 3-tier rule engine application that evaluates user eligibility based on attributes like age, department, income, and spend. The system will use an Abstract Syntax Tree (AST) to represent conditional rules and allow dynamic creation, combination, and modification of these rules.
 
-1.** Project Setup**
+**1.Project Setup**
    
 Prerequisites:
 
@@ -21,14 +21,13 @@ pip install jsonschema
 
 2.**Running the Application:**
 
-Clone the Repository:https://github.com/vaishnavidevli/AST.git
-git clone 
+Clone the Repository:git clone https://github.com/vaishnavidevli/AST.git
 
 
 Start the Application:
 python app.py
 
-3**.Stack Summary:**
+**3.Stack Summary**
 
 Frontend: HTML, CSS, JavaScript
 Backend: Flask (Python), AST Parsing (Python)
@@ -60,3 +59,4 @@ Abstract Syntax Tree (AST)
    
 
 **snapshots**
+
