@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AST Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script> <!-- Include D3.js -->
+    <style>
+        /* Basic styling for the tree */
+        .node circle {
+            fill: steelblue;
+        }
+
+        .node text {
+            font-size: 12px;
+            fill: #333;
+            text-anchor: middle;
+        }
+
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Abstract Syntax Tree (AST) Visualization</h2>
+<svg width="960" height="500"></svg> <!-- SVG container for the AST visualization -->
+
+<script>
+    // Parse the AST from the URL query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const ast = JSON.parse(decodeURIComponent(urlParams.get('ast'))); // Decode the AST from the URL
+
+    // Set up SVG dimensions
+    const svg = d3.select("svg"),
+          width = +svg.attr("width"),
+          height = +svg.attr("height");
+
+    // Create a D3 tree layout
+    const treeLayout = d3.tree().size([width - 160, height - 160]);
+
+    // Convert the AST into a hierarchy structure that D3 can handle
+    const root = d3.hierarchy(ast);
+
+    // Apply the tree layout to the root node
+    treeLayout(root);
+
+    // Create a group for links
+    const linkGroup = svg.append("g").attr("class", "links");
+    // Add the links (lines between nodes)
+    linkGroup.selectAll(".link")
+        .data(root.links())
+        .enter()
+        .append("line")
+        .attr("class", "link")
+        .attr("x1", d => d.source.x + 80)
+        .attr("y1", d => d.source.y + 80)
+        .attr("x2", d => d.target.x + 80)
+        .attr("y2", d => d.target.y + 80);
+
+    // Create a group for nodes
+    const nodeGroup = svg.append("g").attr("class", "nodes");
+    // Add the nodes (circles)
+    nodeGroup.selectAll(".node")
+        .data(root.descendants())
+        .enter()
+        .append("g")
+        .attr("class", "node")
+        .attr("transform", d => `translate(${d.x + 80}, ${d.y + 80})`)
+        .append("circle")
+        .attr("r", 5);
+
+    // Add labels (node names)
+    nodeGroup.selectAll(".node")
+        .append("text")
+        .attr("dy", ".35em")
+        .attr("y", 10)
+        .text(d => d.data.name); // Assuming the AST node has a 'name' attribute
+</script>
+
+</body>
+</html>

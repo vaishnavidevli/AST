@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #FFFBEB;
+        }
+        h1, h2 {
+            color: #333;
+        }
+
+        /* Form styles */
+        form {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #28a745; /* Green */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        /* Grid layout for rule cards */
+        .rule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Rule card styles */
+        .rule-card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #D2E0FB;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Scale-up effect on hover */
+        .rule-card:hover {
+            transform: scale(1.02); /* Scale up by 5% */
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+        }
+
+
+        /* Button styles */
+        button {
+                 background-color: #333;
+                 color: #fff;
+                 text-decoration: none;
+                 padding: 10px 8px;
+                 border-radius: 25px;
+                 font-family: 'Courier New', Courier,
+                 font-size: 18px;
+                 transition: background-color 0.3s ease;
+                 display: inline-flex;
+                 align-items: center;
+                 justify-content: center;
+        }
+
+        .update-btn {
+            background-color: #28a745; /* Green */
+        }
+
+        .evaluate-btn {
+            background-color: #007bff; /* Blue */
+        }
+
+        .delete-btn {
+            background-color: #dc3545; /* Red */
+        }
+
+        /* Button hover effects */
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* Update form */
+        #updateRuleForm {
+            display: none; /* Initially hide the update form */
+            margin-top: 20px;
+
+        }
+    </style>
+</head>
+<body>
+    <h1>Create Rule</h1>
+    <form id="createRuleForm">
+        <label for="rule">Rule:</label>
+        <input type="text" id="rule" name="rule" required placeholder="e.g., age > 18 AND income = '50000'">
+        <button type="submit">Create Rule</button>
+    </form>
+
+    <h2>Existing Rules</h2>
+    <div id="rulesContainer" class="rule-grid"></div>
+
+    <!-- Update Rule Form -->
+    <div id="updateRuleForm">
+        <h2>Update Rule</h2>
+        <form id="updateRule">
+            <input type="hidden" id="updateRuleId">
+            <label for="updatedRule">Updated Rule:</label>
+            <input type="text" id="updatedRule" required>
+            <button type="submit">Update Rule</button>
+        </form>
+    </div>
+
+    <script>
+        // Function to display rules
+        function displayRule(rule) {
+            const rulesContainer = document.getElementById('rulesContainer');
+            const ruleCard = document.createElement('div');
+            ruleCard.classList.add('rule-card');
+            ruleCard.innerHTML = `
+                <h3>Rule ID: ${rule._id}</h3>
+                <p>${rule.rule}</p>
+                <button class="delete-btn" onclick="deleteRule('${rule._id}')">Delete</button>
+                <button class="update-btn" onclick="showUpdateForm('${rule._id}', '${rule.rule}')">Update</button>
+                <button class="evaluate-btn" onclick="evaluateRule('${rule._id}')">Evaluate</button>
+            `;
+            rulesContainer.appendChild(ruleCard);
+        }
+
+        // Fetch and display existing rules on page load
+        fetch('/get_rules')
+            .then(response => response.json())
+            .then(data => {
+                data.rules.forEach(rule => displayRule(rule));
+            });
+
+        // Create new rule
+        document.getElementById('createRuleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const rule = document.getElementById('rule').value;
+
+            fetch('/create_rule', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rule })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('rule').value = ''; // Clear the input field
+                displayRule({ _id: data.rule_id, rule });
+            })
+            .catch(error => {
+                console.error('Error creating rule:', error);
+                document.getElementById('rulesContainer').innerText = `Error: ${error.message}`;
+            });
+        });
+
+        // Delete rule
+        function deleteRule(ruleId) {
+            fetch(`/delete_rule/${ruleId}`, { method: 'DELETE' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        location.reload(); // Reload the page to refresh the rule list
+                    } else {
+                        console.error('Error deleting rule:', data.error);
+                    }
+                })
+                .catch(error => console.error('Error deleting rule:', error));
+        }
+
+        // Show the update form with pre-filled data
+        function showUpdateForm(ruleId, ruleData) {
+            document.getElementById('updateRuleId').value = ruleId;
+            document.getElementById('updatedRule').value = ruleData;
+            document.getElementById('updateRuleForm').style.display = 'block';
+        }
+
+        // Update rule
+        document.getElementById('updateRule').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const ruleId = document.getElementById('updateRuleId').value;
+            const updatedRule = document.getElementById('updatedRule').value;
+
+            fetch(`/update_rule/${ruleId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rule: updatedRule })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                location.reload(); // Reload the page after updating
+            })
+            .catch(error => {
+                console.error('Error updating rule:', error);
+                alert(`Error updating rule: ${error.message}`);
+            });
+        });
+
+
+
+        // Evaluate rule
+        function evaluateRule(ruleId) {
+            const userData = prompt('Enter user data in JSON format (e.g., {"age": 20, "income": 60000}):');
+            if (userData) {
+                try {
+                    const parsedData = JSON.parse(userData);
+                    fetch('/evaluate_rule', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: ruleId, data: parsedData })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(`Evaluation Result: ${data.result}`);
+                    })
+                    .catch(error => {
+                        console.error('Error evaluating rule:', error);
+                        alert(`Error evaluating rule: ${error.message}`);
+                    });
+                } catch (error) {
+                    alert('Invalid JSON format for user data');
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
+
+
