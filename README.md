@@ -15,9 +15,11 @@ Python Version: 3.8+ (Make sure Python is installed, and you have set up a virtu
 Initial Package Installations:
 Install the necessary Python libraries:
 
-pip install Flask
-pip install pymongo
-pip install jsonschema
+**pip install Flask**
+
+**pip install pymongo**
+
+**pip install jsonschema**
 
 2.**Running the Application:**
 
@@ -25,7 +27,8 @@ Clone the Repository:git clone https://github.com/vaishnavidevli/AST.git
 
 
 Start the Application:
-python app.py
+
+**python app.py**
 
 **3.Stack Summary**
 
