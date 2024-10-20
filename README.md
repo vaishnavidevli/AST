@@ -62,3 +62,42 @@ Abstract Syntax Tree (AST)
    
 
 **snapshots**
+![Screenshot (2699)](https://github.com/user-attachments/assets/b0bca43b-c0a7-4649-b616-1516b14740f5)
+
+
+![Screenshot (2698)](https://github.com/user-attachments/assets/557dc676-bd25-4e87-a437-cda1516ab64f)
+
+
+![Screenshot (2697)](https://github.com/user-attachments/assets/a0e4859b-9ba4-4584-820d-82a3b9019af7)
+
+
+![Screenshot (2696)](https://github.com/user-attachments/assets/d72de74e-ae96-4936-b8b9-3e26b19c17b3)
+
+
+![Screenshot (2695)](https://github.com/user-attachments/assets/cf6d9d3c-3dd8-4a7c-b0b1-ed8bd1b88251)
+
+
+![Screenshot (2694)](https://github.com/user-attachments/assets/654f565a-af57-4e45-aa8c-64359f13c030)
+
+
+
+![Screenshot (2693)](https://github.com/user-attachments/assets/038312e3-8b16-4167-9940-d84f5627380f)
+
+
+![Screenshot (2692)](https://github.com/user-attachments/assets/3a924358-31e9-48d0-80c2-4a1ee1967078)
+
+
+![Screenshot (2691)](https://github.com/user-attachments/assets/cfc70bd6-f9c0-4107-b9a9-b2c1b2a5a9b6)
+
+
+![Screenshot (2690)](https://github.com/user-attachments/assets/84bf82bb-cbb2-424d-8b98-538a73e75455)
+
+
+![Screenshot (2689)](https://github.com/user-attachments/assets/2ec28a95-0e60-48b2-b4e7-a7395b1d0ebc)
+
+
+![Screenshot (2688)](https://github.com/user-attachments/assets/37042142-daca-456a-b21f-323002685fe6)
+
+
+![Screenshot (2687)](https://github.com/user-attachments/assets/35bed259-adcc-4617-a4f3-a99176f21095)
+
